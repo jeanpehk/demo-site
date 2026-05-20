@@ -1,0 +1,158 @@
+/* Globals */
+
+:root {
+    --default-margin: 6px;
+    --default-padding: 6px;
+}
+
+@font-face {
+    font-family: "Shippori Mincho";
+    src: url("ShipporiMincho-Regular.ttf") format("truetype");
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Class level styles */
+
+.page-container {
+    /* font-size, font-family */
+    font-size: 16px;
+    font-family: "Shippori Mincho", sans-serif;
+
+    /* flex container properties */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    color: #16181F;
+
+    margin: 0px;
+    padding: 0px;
+}
+
+.page-container-item {
+    width: 100%;
+
+    margin: var(--default-margin);
+    padding: 0px;
+}
+
+.illustrations-container-item {
+    margin: 0px;
+    padding: var(--default-padding);
+}
+
+.header-container-item {
+    margin: 0px;
+    padding: var(--default-padding);
+}
+
+.nav-list-item {
+    margin: 0px;
+    padding: var(--default-padding);
+}
+
+.nav-list-a {
+    margin: 0px;
+    padding: 4px;
+
+    text-decoration: none;
+
+    color: grey;
+}
+
+.nav-list-a:link {
+}
+
+.nav-list-a:visited {
+}
+
+.nav-list-a:hover {
+    color: black;
+}
+
+.nav-list-a:active {
+}
+
+/* ID level styles */
+
+#page-header {
+    border-bottom: solid;
+    border-width: 1px;
+    border-color: #E0E0E0;
+}
+
+#nav-list-container {
+    margin: 0px;
+    padding: 0px;
+
+    /* flex container properties */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+    list-style-position: inside;
+    list-style-type: none;
+}
+
+#page-main {
+}
+
+#page-footer {
+}
+
+#header-container {
+    margin: 0px;
+    padding: 0px;
+
+    border-bottom-color: rgb(17, 17, 17);
+
+    /* flex container properties */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+#illustrations-container {
+    margin: 0px;
+    padding: 0px;
+
+    /* flex container properties */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+
+}
+
+#illustrations-heading {
+}
+
+#illustrations-images {
+}
+
+#footer-container {
+    margin: 0px;
+    padding: 0px;
+
+    /* flex container properties */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
