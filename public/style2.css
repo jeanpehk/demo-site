@@ -1,0 +1,18 @@
+@font-face {
+    font-family: "Shippori Mincho";
+    src: url("ShipporiMincho-Regular.ttf") format("truetype");
+}
+
+:root {
+    font-size: 16px;
+    font-family: "Shippori Mincho", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
