@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/redo", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/index2.html"));
+    res.sendFile(path.join(__dirname, "../public/redo.html"));
 });
 
 app.listen(port, () => {
