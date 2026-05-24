@@ -8,8 +8,11 @@
     --default-margin: 6px;
     --default-padding: 6px;
 
-    --default-header-color: black;
-    --default-text-color: #16181F;
+    --default-header-color: #16181f;
+    --default-text-color: #16181f;
+
+    --default-link-color: #2563eb;
+    --default-link-color-hover: #0c3dc7;
 
     --header-height: 4rem;
 }
@@ -285,4 +288,16 @@ h1, h2, h2 {
     color: #bbb;
     text-decoration: none;
     cursor: pointer;
+}
+
+#redo-link {
+    position: absolute;
+    text-decoration: none;
+    font-style: italic;
+    right: var(--default-padding);
+    color: var(--default-link-color);
+}
+
+#redo-link:hover {
+    color: var(--default-link-color-hover);
 }

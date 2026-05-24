@@ -7,7 +7,7 @@ The backend is a simple express.js server that just returns the index page, rest
     - A basic html/css/js website.
     - srcs in public/index*
 - localhost:3000/redo
-    - The same site but with heavy js focus, the DOM elements are dynamically created with javascript.
+    - The same site but with heavy js focus, the DOM elements are dynamically created with JavaScript.
     - srcs in public/redo*
 
 ## Build & Run
