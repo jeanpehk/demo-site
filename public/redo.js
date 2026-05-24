@@ -8,47 +8,77 @@ const DEFAULT_TEXT_COLOR = "#16181f";
 const DEFAULT_LINK_COLOR = "#2563eb";
 const DEFAULT_LINK_COLOR_HOVER = "#0c3dc7";
 
-const addDefaultFlexContainerStyles = (container, direction) => {
-    container.style.display = "flex";
-    container.style.flexDirection = direction;
-    container.style.flexWrap = "nowrap";
-    container.style.justifyContent = "center";
-    container.style.alignItems = "center";
-    container.style.alignContent = "center";
+const Element = (tag, style) => {
+    const element = document.createElement(tag);
+
+    Object.assign(element.style, { ...style});
+
+    return element;
 }
 
-const Nav = (jumpLinks) => {
-    const nav = document.createElement("nav");
+const A = (href, text, style) => {
+    const a = Element("a", style);
 
-    const navStyle = document.createElement("style");
-    nav.appendChild(navStyle);
+    a.href = href;
+    a.textContent = text;
+
+    return a;
+}
+
+const H2 = (text, style) => {
+    const h2 = Element("h2", style);
+
+    h2.textContent = text;
+
+    return h2;
+}
+
+const Img = (src, alt, style) => {
+    const img = Element("img", style);
+
+    img.src = src;
+    img.alt = alt;
+
+    return img;
+}
+
+const MyFlexContainer = (tag, direction, style) => {
+    const flexStyle = {
+        ...{
+            display: "flex",
+            flexDirection: direction,
+            justifyContent: "center", // default = flex-start
+            alignItems: "center",     // default = normal
+            alignContent: "center",   // default = stretch
+        }, ...style
+    }
+
+    return Element(tag, flexStyle);
+};
+
+const NavBar = (jumpLinks) => {
+    const nav = Element("nav");
 
     {
-        const ul = document.createElement("ul");
-        ul.id = "nav-ul-container";
+        const ul = MyFlexContainer("ul", "row", {
+            margin: "0px",
+            padding: "0px",
+            listStylePosition: "inside",
+            listStyleType: "none",
+        });
 
-        addDefaultFlexContainerStyles(ul, "row");
+        const createLiA = (link) => {
+            const li = Element("li", {
+                padding: DEFAULT_PADDING,
+            });
 
-        ul.style.margin = "0px";
-        ul.style.padding = "0px";
-        ul.style.listStylePosition = "inside";
-        ul.style.listStyleType = "none";
-
-        const addLi = (aHref, aText) => {
-            const li = document.createElement("li");
-            li.style.padding = DEFAULT_PADDING;
-
-            const a = document.createElement("a");
-
-            a.style.margin = "0px";
-            a.style.padding = "4px";
-            a.style.textDecoration = "none";
-            a.style.transition = "0.1s";
-            a.style.color = "gray";
-
-            a.href = aHref;
-            a.text = aText;
-
+            const a = A(link.href, link.text, {
+                margin: "0px",
+                padding: "4px",
+                textDecoration: "none",
+                transition: "0.1s",
+                color: "gray",
+            });
             a.onmouseenter = () => {
                 a.style.color = "black";
             };
@@ -58,31 +88,23 @@ const Nav = (jumpLinks) => {
 
             li.appendChild(a);
 
-            ul.appendChild(li);
+            return li;
         };
 
-        for (const link of jumpLinks) {
-            addLi(link.href, link.text);
-        }
-
-        nav.appendChild(ul);
+        nav.appendChild(ul).append(...jumpLinks.map(createLiA));
     }
 
     return nav;
 };
 
 const VersionLink = () => {
-    const a = document.createElement("a");
-
-    a.href = "/";
-    a.textContent = "Switch to plain HTML/CSS/JS version";
-
-    a.style.position = "absolute";
-    a.style.textDecoration = "none";
-    a.style.fontStyle = "italic";
-    a.style.right = DEFAULT_PADDING;
-    a.style.color = DEFAULT_LINK_COLOR;
-
+    const a = A("/", "Switch to plain HTML/CSS/JS version", {
+        position: "absolute",
+        textDecoration: "none",
+        fontStyle: "italic",
+        right: DEFAULT_PADDING,
+        color: DEFAULT_LINK_COLOR
+    });
     a.onmouseenter = () => {
         a.style.color = DEFAULT_LINK_COLOR_HOVER;
     };
@@ -94,26 +116,23 @@ const VersionLink = () => {
 }
 
 const Header = (jumpLinks) => {
-    const header = document.createElement("header");
+    const header = MyFlexContainer("header", "row", {
+        position: "sticky",
+        top: "0",
+        width: "100%",
+        height: HEADER_HEIGHT,
+        zIndex: "1000",
+        marginTop: "0px",
+        marginBottom: "0px",
+        paddingTop: "0px",
+        paddingBottom: "0px",
+        backgroundColor: "white",
+        borderBottom: "solid",
+        borderWidth: "1px",
+        borderColor: "#E0E0E0",
+    });
 
-    header.style.position = "sticky";
-    header.style.top = "0";
-    header.style.width = "100%";
-    header.style.height = HEADER_HEIGHT;
-    header.style.zIndex = "1000";
-    header.style.marginTop = "0px";
-    header.style.marginBottom = "0px";
-    header.style.paddingTop = "0px";
-    header.style.paddingBottom = "0px";
-    header.style.backgroundColor = "white";
-
-    addDefaultFlexContainerStyles(header, "row");
-
-    header.style.borderBottom = "solid";
-    header.style.borderWidth = "1px";
-    header.style.borderColor = "#E0E0E0";
-
-    const nav = Nav(jumpLinks);
+    const nav = NavBar(jumpLinks);
     const versionLink = VersionLink();
 
     header.append(nav, versionLink);
@@ -122,196 +141,172 @@ const Header = (jumpLinks) => {
 }
 
 const About = () => {
-    const about = document.createElement("div");
+    const about = Element("div", {
+        width: "100%",
+        padding: DEFAULT_PADDING,
+        margin: DEFAULT_MARGIN,
+        scrollMarginTop: HEADER_HEIGHT,
+    });
     about.id = "about";
 
-    about.style.width = "100%";
-    about.style.padding = DEFAULT_PADDING;
-    about.style.margin = DEFAULT_MARGIN;
-    about.style.scrollMarginTop = HEADER_HEIGHT;
+    const container = MyFlexContainer("div", "column");
 
-    const container = document.createElement("div");
-    addDefaultFlexContainerStyles(container, "column");
+    const h2 = H2("About", {
+        margin: "0px",
+        padding: DEFAULT_PADDING,
+        color: DEFAULT_HEADER_COLOR,
+    });
 
-    const h2 = document.createElement("h2");
-    h2.textContent = "About";
-    h2.style.margin = "0px";
-    h2.style.padding = DEFAULT_PADDING;
-    h2.style.color = DEFAULT_HEADER_COLOR;
-
-    const text = document.createElement("div");
-    text.style.padding = DEFAULT_PADDING;
-    text.innerHTML = `This is a JavaScript heavy version of the site. It was written to test out rendering purely on the JS side dynamically and without the use of frameworks.
+    const text = Element("div", {
+        padding: DEFAULT_PADDING,
+    });
+    text.innerHTML = `This is a JavaScript heavy version of the site.
+    It was written to test out rendering purely on the JS side dynamically and without the use of frameworks.
     All of the body of this document is dynamically generated into a single "app" div.
     The backend is a simple <a href="https://expressjs.com">Express.js</a> server that only returns
     either the default plain HTML/CSS/JS page or the JS heavy page.
     The illustrations are images generated by chatgpt and the site is just a basic version of what an artist
     could use to show off their work. I'll be adding stuff over time to make the site more interesting.`;
 
-    container.append(h2, text);
-    about.append(container);
+    about.appendChild(container).append(h2, text);
 
     return about;
 };
 
 const Illustrations = () => {
-    const illustrations = document.createElement("main");
-
+    const illustrations = MyFlexContainer("main", "column", {
+        width: "100%",
+        padding: DEFAULT_PADDING,
+        margin: DEFAULT_MARGIN,
+        scrollMarginTop: HEADER_HEIGHT,
+    });
     illustrations.id = "illustrations";
 
-    illustrations.style.width = "100%";
-    illustrations.style.padding = DEFAULT_PADDING;
-    illustrations.style.margin = DEFAULT_MARGIN;
-    illustrations.style.scrollMarginTop = HEADER_HEIGHT;
+    const h2 = H2("Illustrations", {
+        color: DEFAULT_HEADER_COLOR,
+    });
 
-    addDefaultFlexContainerStyles(illustrations, "column");
+    //// @Todo: try to get rid of this.
+    const modalAndImgsDiv = Element("div");
 
-    const h2 = document.createElement("h2");
-    h2.textContent = "Illustrations";
-    h2.style.color = DEFAULT_HEADER_COLOR;
+    // Build the modal window that will be show if the user clicks on a preview image.
 
-    // @Todo: try to get rid of this.
-    const imgsDiv = document.createElement("div");
-
-    // @Note: need to ref these later with img onclick.
-    let modal = null;
-    let modalImg = null;
-    {
-        modal = document.createElement("div");
+    const modal = Element("div", {
+        display: "none",
+        position: "fixed",
+        zIndex: "1",
+        left: "0",
+        top: "0",
+        width: "100%",
+        height: "100%",
+        overflow: "auto",
+        backgroundColor: "rgb(0,0,0)",
+        backgroundColor: "rgba(0,0,0,0.9)",
+    });
+    const modalExitButton = Element("span", {
+        position: "absolute",
+        top: HEADER_HEIGHT,
+        right: "35px",
+        fontSize: "3rem",
+        fontWeight: "bold",
+        transition: "0.1s",
+        color: "#f1f1f1",
+    });
+    modalExitButton.innerHTML = "&times";
+    modalExitButton.onmouseenter = () => {
+        modalExitButton.style.color = "#bbb"
+        modalExitButton.style.textDecoration = "none";
+        modalExitButton.style.cursor = "pointer";
+    };
+    modalExitButton.onmouseleave = () => {
+        modalExitButton.style.color = "#f1f1f1";
+    };
+    modalExitButton.onclick = () => {
         modal.style.display = "none";
-        modal.style.position = "fixed";
-        modal.style.zIndex = "1";
-        modal.style.left = "0";
-        modal.style.top = "0";
-        modal.style.width = "100%";
-        modal.style.height = "100%";
-        modal.style.overflow = "auto";
-        modal.style.backgroundColor = "rgb(0,0,0)";
-        modal.style.backgroundColor = "rgba(0,0,0,0.9)";
-
-        {
-            const span = document.createElement("span");
-
-            span.id = "span-close";
-            span.style.position = "absolute";
-            span.style.top = HEADER_HEIGHT;
-            span.style.right = "35px";
-            span.style.fontSize = "3rem";
-            span.style.fontWeight = "bold";
-            span.style.transition = "0.1s";
-            span.style.color = "#f1f1f1";
-            span.innerHTML = "&times";
-         
-            span.onmouseenter = () => {
-                span.style.color = "#bbb"
-                span.style.textDecoration = "none";
-                span.style.cursor = "pointer";
-            };
-            span.onmouseleave = () => {
-                span.style.color = "#f1f1f1";
-            };
-            span.onclick = () => {
-                modal.style.display = "none";
-            }
-
-            modalImg = document.createElement("img");
-            modalImg.id = "modal-img";
-            modalImg.style.display = "block";
-            modalImg.style.margin = "auto";
-            modalImg.style.width = "80%";
-
-            modal.append(span, modalImg);
-        }
-
-        imgsDiv.appendChild(modal);
     }
+
+    const modalImg = Element("img", {
+        display: "block",
+        margin: "auto",
+        width: "60%",
+    });
+
+    modal.append(modalExitButton, modalImg);
+
+    // Build the image components that can be clicked on to open the modal.
+
+    const imgContainer = MyFlexContainer("div", "row");
 
     {
-        const imgContainer = document.createElement("div");
-        addDefaultFlexContainerStyles(imgContainer, "row");
+        const imgs = [
+            {
+                src: "images/4n.png",
+                alt: "Look",
+            },
+            {
+                src: "images/2.png",
+                alt: "Sun",
+            },
+            {
+                src: "images/3.png",
+                alt: "Snow",
+            },
+        ];
+        const imgWidth = ((100 / (imgs.length + 0)).toFixed(2)).toString() + "%";
 
-        {
-            const imgs = [
-                {
-                    src: "images/4n.png",
-                    alt: "Look",
-                },
-                {
-                    src: "images/2.png",
-                    alt: "Sun",
-                },
-                {
-                    src: "images/3.png",
-                    alt: "Snow",
-                },
-            ];
-            const imgWidth = ((100 / (imgs.length + 0)).toFixed(2)).toString() + "%";
-
-            const addThumbnail = (imgData) => {
-                const img = document.createElement("img");
-                img.src = imgData.src;
-                img.alt = imgData.alt;
-
-                const opacity = 0.75;
-                img.style.width = imgWidth;
-                img.style.padding = DEFAULT_PADDING;
+        const createImage = (imgData) => {
+            const opacity = 0.75;
+            const img = Img(imgData.src, imgData.alt, {
+                width: imgWidth,
+                padding: DEFAULT_PADDING,
+                opacity: opacity,
+                cursor: "pointer",
+            });
+            img.onclick = () => {
+                modal.style.display = "block";
+                modalImg.src = img.src;
+            }
+            img.onmouseenter = () => {
+                img.style.opacity = 0.9;
+            };
+            img.onmouseleave = () => {
                 img.style.opacity = opacity;
-                img.style.cursor = "pointer";
-
-                img.onclick = () => {
-                    modal.style.display = "block";
-                    modalImg.src = img.src;
-                }
-                img.onmouseenter = () => {
-                    img.style.opacity = 0.9;
-                };
-                img.onmouseleave = () => {
-                    img.style.opacity = opacity;
-                };
-
-                imgContainer.appendChild(img);
             };
 
-            for (const img of imgs) {
-                addThumbnail(img);
-            }
-        }
+            return img;
+        };
 
-        imgsDiv.appendChild(imgContainer);
+        imgContainer.append(...imgs.map(createImage));
     }
 
-    illustrations.append(h2, imgsDiv);
+    modalAndImgsDiv.append(modal, imgContainer);
+    illustrations.append(h2, modalAndImgsDiv);
 
     return illustrations;
 };
 
 const Contact = () => {
-    const contact = document.createElement("div");
+    const contact = MyFlexContainer("div", "column", {
+        width: "100%",
+        margin: DEFAULT_MARGIN,
+        padding: DEFAULT_PADDING,
+        scrollMarginTop: HEADER_HEIGHT,
+    });
     contact.id = "contact";
 
-    contact.style.width = "100%";
-    contact.style.margin = DEFAULT_MARGIN;
-    contact.style.padding = DEFAULT_PADDING;
-    contact.style.scrollMarginTop = HEADER_HEIGHT;
+    const h2 = H2("Contact", {
+        color: DEFAULT_HEADER_COLOR,
+    });
 
-    addDefaultFlexContainerStyles(contact, "column");
-
-    const h2 = document.createElement("h2");
-    h2.textContent = "Contact";
-    h2.style.color = DEFAULT_HEADER_COLOR;
-
-    const address = document.createElement("address");
+    const address = Element("address");
 
     {
         const addA = (href, text) => {
-            const a = document.createElement("a");
-            a.href = href;
-            a.textContent = text;
-
-            a.style.textDecoration = "none";
-            a.style.padding = "2px";
-            a.style.color = DEFAULT_LINK_COLOR;
-
+            const a = A(href, text, {
+                textDecoration: "none",
+                padding: "2px",
+                color: DEFAULT_LINK_COLOR,
+            });
             a.onmouseenter = () => {
                 a.style.color = DEFAULT_LINK_COLOR_HOVER;
             };
@@ -332,12 +327,10 @@ const Contact = () => {
 };
 
 const Footer = () => {
-    const footer = document.createElement("footer");
+    const footer = MyFlexContainer("footer", "column");
     footer.id = "footer";
 
-    addDefaultFlexContainerStyles(footer, "column");
-
-    const p = document.createElement("p");
+    const p = Element("p");
     p.innerHTML = "&copy; 2026 Artist101";
 
     footer.appendChild(p);
@@ -349,14 +342,12 @@ const Footer = () => {
 
 const app = document.getElementById("app");
 
-const container = document.createElement("div");
-addDefaultFlexContainerStyles(container, "column");
-container.style.backgroundColor = "white";
-container.style.color = DEFAULT_TEXT_COLOR;
-container.style.margin = "0px";
-container.style.padding = "0px";
-
-app.append(container);
+const container = MyFlexContainer("div", "column", {
+    backgroundColor: "white",
+    color: DEFAULT_TEXT_COLOR,
+    margin: "0px",
+    padding: "0px",
+});
 
 const about = About();
 const illustrations = Illustrations();
@@ -380,7 +371,7 @@ const jumpLinks = [
 
 const header = Header(jumpLinks);
 
-container.append(
+app.appendChild(container).append(
     header,
     about,
     illustrations,
